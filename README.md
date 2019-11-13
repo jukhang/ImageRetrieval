@@ -35,10 +35,10 @@ python query_online.py -query database/001_accordion_image_0001.jpg -index featu
 #### Flask Web Restful 接口
 
 ```python
-python web_restful.py`
+python web_restful.py
 ```
 
-修复因为第一次加载model提取特征再次请求导致keras OOM问题
+修复因为第一次加载model提取特征再次请求导致GPU OOM问题
 
 ```python
 model = VGGNet()
