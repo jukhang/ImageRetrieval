@@ -36,6 +36,28 @@ python query_online.py -query database/001_accordion_image_0001.jpg -index featu
 
 `python web_restful.py`
 
+修复因为第一次加载model提取特征再次请求导致keras OOM问题
+
+`
+model = VGGNet()
+q_vector = model.extract_feat(im_file)
+
+clear_session()
+tf.reset_default_graph()
+`
+
+没法并发测试，修复并发测试跑一张图占满整个GPU问题
+
+`
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.1 # 占用GPU10%的显存
+session = tf.Session(config=config)
+`
+
+使用gunicore代理服务，提高服务并发能力
+
+`gunicorn -w 4 -b 0.0.0.0:9393 web_restful:app`
+
 #### 相关资料
 
 ##### 图像特征提取算法
@@ -49,6 +71,9 @@ python query_online.py -query database/001_accordion_image_0001.jpg -index featu
 设计高可用的哈希算法，把高维矩阵映射到哈希值上，LSH(Locality Sensitive Hashing)局部敏感哈希算法
 
 https://blog.csdn.net/jinxueliu31/article/details/37768995
+
 https://blog.csdn.net/wonner_/article/details/80985727
+
 https://blog.csdn.net/guoziqing506/article/details/53019049
+
 https://waltyou.github.io/Faiss-In-Project/

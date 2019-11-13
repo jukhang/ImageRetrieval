@@ -13,6 +13,10 @@ def get_image_search(im_file):
     imgNames = h5f['dataset_2'][:]
     h5f.close()
 
+    config = tf.ConfigProto()
+    config.gpu_options.per_process_gpu_memory_fraction = 0.1 # 占用GPU10%的显存
+    session = tf.Session(config=config)
+
     model = VGGNet()
     q_vector = model.extract_feat(im_file)
     #print("清除训练模型！")
