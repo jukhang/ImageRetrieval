@@ -34,25 +34,27 @@ python query_online.py -query database/001_accordion_image_0001.jpg -index featu
 
 #### Flask Web Restful 接口
 
-`python web_restful.py`
+```python
+python web_restful.py`
+```
 
 修复因为第一次加载model提取特征再次请求导致keras OOM问题
 
-`
+```python
 model = VGGNet()
 q_vector = model.extract_feat(im_file)
 
 clear_session()
 tf.reset_default_graph()
-`
+```
 
 没法并发测试，修复并发测试跑一张图占满整个GPU问题
 
-`
+```python
 config = tf.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.1 # 占用GPU10%的显存
 session = tf.Session(config=config)
-`
+```
 
 使用gunicore代理服务，提高服务并发能力
 
@@ -64,7 +66,7 @@ session = tf.Session(config=config)
 
 常用的图像特征提取算法有 `SIFT`, `SURF`, `CNN` `HOG`特征，`LBP`特征，`Haar`特征
 
-##### 特征举证相似度的计算方法
+##### 特征矩阵相似度的计算方法
 
 计算两个特征矩阵之间的余弦相似度。
 高维数据的快速最近邻算法FLANN，构造kd Tree。优先搜索k-means树算法，层次聚类树，
